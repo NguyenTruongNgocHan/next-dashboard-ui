@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.clip-hexagon {
+  clip-path: path("M25 5 Q50 0 75 5 Q100 25 95 50 Q100 75 75 95 Q50 100 25 95 Q0 75 5 50 Q0 25 25 5 Z");
+}
