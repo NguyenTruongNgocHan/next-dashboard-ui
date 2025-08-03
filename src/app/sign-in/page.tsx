@@ -1,6 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from "next/image";
+import AnimatedLoginButton from './AnimatedLoginButton';
+
+
 
 export default function SignInPage() {
   return (
@@ -8,31 +12,61 @@ export default function SignInPage() {
       {/* Form Sign In */}
       <section className="flex flex-col justify-center items-center w-full lg:w-1/2 px-4 sm:px-6 bg-white">
         <div className="w-full max-w-md">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Đăng nhập</h1>
-          <p className="text-sm text-gray-500 mb-6">Chào mừng bạn quay lại!</p>
+          {/* Logo + tiêu đề */}
+          <div className="flex items-center mb-6 ">
+            <div className="relative w-10 h-10 rotate-315 mr-2">
+              <Image
+                src="/images/frame_logo.png"
+                alt="BrainBattle Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+              {/* Chữ B đè lên */}
+              <div className="absolute inset-0 flex items-center justify-center text-white text-base font-extrabold">B</div>
+            </div>
+
+            {/* Tên brand */}
+            <h1 className="text-xl font-semibold text-gray-800">Brain Battle</h1>
+          </div>
+
+          <p className="text-sm text-gray-500 mb-6">Đăng nhập để tiếp tục</p>
 
           <form className="space-y-4">
             <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              type="text"
+              placeholder="Tài khoản"
+              className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-500"
+
             />
             <input
               type="password"
               placeholder="Mật khẩu"
-              className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-500"
+
             />
-            <button
-              type="submit"
-              className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded hover:bg-yellow-600 transition"
-            >
-              Đăng nhập
-            </button>
-            <p className="text-sm text-center">
+
+            {/* Ghi nhớ + Quên mật khẩu */}
+            <div className="flex justify-between items-center text-sm text-gray-600">
+              <label className="flex items-center">
+                <input type="checkbox" className="mr-2" />
+                Ghi nhớ đăng nhập
+              </label>
+              <a href="#" className="text-blue-500 hover:underline">
+                Quên mật khẩu?
+              </a>
+            </div>
+
+            {/* Nút đăng nhập */}
+            <AnimatedLoginButton />
+
+
+            {/* Link đăng ký */}
+            <p className="text-sm text-center text-gray-700">
               Chưa có tài khoản?{' '}
-              <Link href="/sign-up" className="text-yellow-500 hover:underline">
+              <a href="#" className="text-blue-500 hover:underline">
                 Đăng ký
-              </Link>
+              </a>
             </p>
           </form>
         </div>
@@ -49,17 +83,30 @@ export default function SignInPage() {
         {/* Nội dung branding */}
         <div className="relative z-10 text-center">
           <div className="flex justify-center mb-4">
-            <div className="rotate-315 shadow-lg">
-  <div className="w-20 h-20 bg-black text-white flex items-center justify-center text-3xl font-extrabold clip-soft-hexagon">
-    B
-  </div>
-</div>
-
-
+            {/* Khối logo */}
+            <div className="relative w-20 h-20 rotate-315">
+              {/* Ảnh logo */}
+              <Image
+                src="/images/frame_logo.png"
+                alt="BrainBattle Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+              {/* Chữ B đè lên ảnh */}
+              <div className="absolute inset-0 flex items-center justify-center text-white text-3xl font-extrabold">
+                B
+              </div>
+            </div>
           </div>
-          <h2 className="text-3xl font-extrabold text-white drop-shadow">BrainBattle</h2>
-          <p className="text-white text-sm mt-2 opacity-90">Nền tảng học tiếng Anh giao tiếp, vui như game!</p>
+
+          {/* Text thương hiệu */}
+          <h2 className="text-3xl font-extrabold text-black drop-shadow">BrainBattle</h2>
+          <p className="text-black text-sm mt-2 opacity-90">
+            Nền tảng học tiếng Anh giao tiếp, vui như game!
+          </p>
         </div>
+
       </section>
     </main>
   );
