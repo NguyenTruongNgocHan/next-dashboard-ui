@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from "next/image";
-import AnimatedLoginButton from '@/components/AnimatedLoginButton';
+import AnimatedLoginButton from '@/components/auth/AnimatedLoginButton';
 
 
 
