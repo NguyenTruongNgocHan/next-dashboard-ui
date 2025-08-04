@@ -1,43 +1,16 @@
-'use client'
+'use client';
 
 import {
-  LayoutDashboard,
-  Users,
-  UserX,
-  Search,
-  ClipboardList,
-  FileCheck,
-  Tag,
-  BarChart2,
-  Dumbbell,
-  Utensils,
-  Puzzle,
-  Medal,
-  MessageSquare,
-  AlertTriangle,
-  ShieldCheck,
-  CalendarCheck,
-  Check,
-  Reply,
-  DollarSign,
-  Cpu,
-  BookOpenCheck,
-  Bell,
-  CalendarClock,
-  Settings,
-  Shield,
-  LockKeyhole,
-  ChevronRight,
-  ChevronDown,
-  Video,
-  Star,
-  Sword
+  LayoutDashboard, Users, UserX, Search, ClipboardList, FileCheck, Tag, BarChart2,
+  Dumbbell, Utensils, Puzzle, Medal, MessageSquare, AlertTriangle, ShieldCheck,
+  CalendarCheck, Check, Reply, DollarSign, Cpu, BookOpenCheck, Bell, CalendarClock,
+  Settings, Shield, LockKeyhole, ChevronRight, ChevronDown, Video, Star, Sword
 } from 'lucide-react';
-
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { cn } from '@/lib/utils';
 
 type MenuItem = {
@@ -47,7 +20,7 @@ type MenuItem = {
   children?: MenuItem[];
 };
 
-const menu = [
+const menu: MenuItem[] = [
   {
     label: 'TỔNG QUAN',
     icon: LayoutDashboard,
@@ -135,31 +108,55 @@ const menu = [
   }
 ];
 
-
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const sidebarRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(sidebarRef.current, { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: 'power3.out' });
+  }, []);
 
   const toggleGroup = (label: string) => {
-    setOpenGroups(prev => ({ ...prev, [label]: !prev[label] }));
+    const isOpening = !openGroups[label];
+    setOpenGroups(prev => ({ ...prev, [label]: isOpening }));
+
+    setTimeout(() => {
+      const submenu = document.querySelector(`[data-submenu="${label}"]`);
+      if (submenu) {
+        gsap.fromTo(
+          submenu,
+          { height: 0, opacity: 0 },
+          {
+            height: 'auto',
+            opacity: 1,
+            duration: 0.4,
+            ease: 'power2.out'
+          }
+        );
+      }
+    }, 50);
   };
 
   const isChildActive = (children: MenuItem[]) =>
     children.some(child => child.href && pathname.startsWith(child.href));
 
   return (
-    <aside className="w-72 bg-slate-800 text-white h-screen border-r border-yellow-400 flex flex-col">
-      <div className="p-6 border-b border-yellow-400">
+    <aside
+      ref={sidebarRef}
+      className="w-72 bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-[#e2e8f0] h-screen border-r border-[#fbbf24] flex flex-col shadow-[0_2px_20px_rgba(251,191,36,0.15)]"
+    >
+      <div className="p-6 border-b border-[#fbbf24]">
         <div className="flex items-center gap-3">
-          <div className="bg-yellow-400 text-slate-900 font-bold w-10 h-10 rounded-full flex items-center justify-center text-lg">BB</div>
+          <div className="bg-[#fbbf24] text-[#0f172a] font-bold w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-md">BB</div>
           <div>
-            <h1 className="text-xl font-semibold">Admin Panel</h1>
-            <p className="text-sm text-yellow-200">Health System</p>
+            <h1 className="text-xl font-semibold">BRAIN BATTLE</h1>
+            <p className="text-sm text-[#fde68a]">Learning Language System</p>
           </div>
         </div>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-2 text-sm overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-2 text-sm overflow-y-auto scrollbar-thin scrollbar-thumb-[#facc15] scrollbar-track-transparent">
         {menu.map(item => {
           const isOpen = openGroups[item.label] || (item.children && isChildActive(item.children));
 
@@ -168,23 +165,23 @@ export default function AdminSidebar() {
               <div key={item.label}>
                 <button
                   onClick={() => toggleGroup(item.label)}
-                  className="flex w-full items-center justify-between text-yellow-400 px-3 py-2 hover:bg-yellow-100 hover:text-black rounded-lg transition"
+                  className="flex w-full items-center justify-between text-[#fbbf24] px-3 py-2 hover:bg-[#fbbf24]/10 hover:text-[#fde68a] rounded-lg transition"
                 >
                   <div className="flex items-center gap-2">
                     <item.icon className="w-5 h-5" />
-                    <span className="font-semibold">{item.label}</span>
+                    <span className="font-semibold text-sm">{item.label}</span>
                   </div>
-                  {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                  <ChevronRight className={cn("w-4 h-4 transition-transform duration-200", isOpen && "rotate-90")} />
                 </button>
                 {isOpen && (
-                  <div className="pl-8 mt-1 space-y-1">
+                  <div className="pl-8 mt-1 space-y-1" data-submenu={item.label}>
                     {item.children.map(child => (
                       <Link
                         key={child.label}
                         href={child.href!}
                         className={cn(
-                          'flex items-center gap-2 px-2 py-1 rounded hover:bg-yellow-100 hover:text-black transition',
-                          pathname === child.href && 'bg-yellow-100 text-black font-semibold'
+                          'flex items-center gap-2 px-2 py-1 rounded-md hover:bg-[#fbbf24]/10 hover:text-[#fde68a] transition duration-150',
+                          pathname === child.href && 'bg-[#fbbf24] text-[#0f172a] font-semibold shadow-sm'
                         )}
                       >
                         <child.icon className="w-4 h-4" />
@@ -202,12 +199,12 @@ export default function AdminSidebar() {
               key={item.label}
               href={item.href!}
               className={cn(
-                'flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-yellow-100 hover:text-black transition',
-                pathname === item.href && 'bg-yellow-100 text-black font-semibold'
+                'flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#fbbf24]/10 hover:text-[#fde68a] transition',
+                pathname === item.href && 'bg-[#fbbf24] text-[#0f172a] font-semibold shadow-sm'
               )}
             >
               <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
+              <span className="text-sm">{item.label}</span>
             </Link>
           );
         })}
