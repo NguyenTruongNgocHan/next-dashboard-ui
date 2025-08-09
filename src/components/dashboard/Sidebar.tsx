@@ -4,9 +4,10 @@ import {
   LayoutDashboard, Users, UserX, Search, ClipboardList, FileCheck, Tag, BarChart2,
   Dumbbell, Utensils, Puzzle, Medal, MessageSquare, AlertTriangle, ShieldCheck,
   CalendarCheck, Check, Reply, DollarSign, Cpu, BookOpenCheck, Bell, CalendarClock,
-  Settings, Shield, LockKeyhole, ChevronRight, ChevronDown, Video, Star, Sword
+  Settings, Shield, LockKeyhole, ChevronRight, Video, Star, Sword
 } from 'lucide-react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
@@ -21,11 +22,7 @@ type MenuItem = {
 };
 
 const menu: MenuItem[] = [
-  {
-    label: 'TỔNG QUAN',
-    icon: LayoutDashboard,
-    href: '/admin'
-  },
+  { label: 'TỔNG QUAN', icon: LayoutDashboard, href: '/admin' },
   {
     label: 'QUẢN LÝ NGƯỜI DÙNG',
     icon: Users,
@@ -111,104 +108,140 @@ const menu: MenuItem[] = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-  const sidebarRef = useRef(null);
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    gsap.fromTo(sidebarRef.current, { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: 'power3.out' });
+    gsap.fromTo(sidebarRef.current, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power2.out' });
   }, []);
 
   const toggleGroup = (label: string) => {
     const isOpening = !openGroups[label];
     setOpenGroups(prev => ({ ...prev, [label]: isOpening }));
-
+    // submenu animation
     setTimeout(() => {
       const submenu = document.querySelector(`[data-submenu="${label}"]`);
       if (submenu) {
-        gsap.fromTo(
-          submenu,
-          { height: 0, opacity: 0 },
-          {
-            height: 'auto',
-            opacity: 1,
-            duration: 0.4,
-            ease: 'power2.out'
-          }
-        );
+        gsap.fromTo(submenu, { height: 0, opacity: 0 }, { height: 'auto', opacity: 1, duration: 0.28, ease: 'power2.out' });
       }
-    }, 50);
+    }, 30);
   };
 
   const isChildActive = (children: MenuItem[]) =>
-    children.some(child => child.href && pathname.startsWith(child.href));
+    children.some(child => child.href && pathname.startsWith(child.href!));
 
   return (
     <aside
-      ref={sidebarRef}
-      className="w-72 bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-[#e2e8f0] h-screen border-r border-[#fbbf24] flex flex-col shadow-[0_2px_20px_rgba(251,191,36,0.15)]"
-    >
-      <div className="p-6 border-b border-[#fbbf24]">
-        <div className="flex items-center gap-3">
-          <div className="bg-[#fbbf24] text-[#0f172a] font-bold w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-md">BB</div>
-          <div>
-            <h1 className="text-xl font-semibold">BRAIN BATTLE</h1>
-            <p className="text-sm text-[#fde68a]">Learning Language System</p>
-          </div>
+  ref={sidebarRef}
+  className="w-72 h-screen flex flex-col
+             bg-gradient-to-b from-[#1A1D24] to-[#22252C]
+             text-[#E8EAF0] border-r border-white/5
+             shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
+>
+  {/* Header */}
+  <div className="p-5 border-b border-white/5">
+    <div className="flex items-center gap-3">
+      {/* Hex logo with B */}
+      <div className="relative w-10 h-10">
+        <div className="absolute inset-0 rotate-[18deg]">
+          <Image
+            src="/images/frame_logo_yellow2.png"
+            alt="BrainBattle Logo"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+        <div className="absolute inset-0 -rotate-[18deg] flex items-center justify-center text-white text-lg font-extrabold">
+          B
         </div>
       </div>
+      <div className="leading-tight">
+        <h1 className="text-[15px] font-semibold tracking-wide">BRAIN BATTLE</h1>
+        <p className="text-[12px] text-[#FFD84D]">Learning Language System</p>
+      </div>
+    </div>
+  </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-2 text-sm overflow-y-auto scrollbar-thin scrollbar-thumb-[#facc15] scrollbar-track-transparent">
-        {menu.map(item => {
-          const isOpen = openGroups[item.label] || (item.children && isChildActive(item.children));
+  {/* Nav */}
+  <nav className="flex-1 px-3 py-4 space-y-2 text-[13.5px] overflow-y-auto
+                  scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+    {menu.map(item => {
+      const isOpen = openGroups[item.label] || (item.children && isChildActive(item.children));
 
-          if (item.children) {
-            return (
-              <div key={item.label}>
-                <button
-                  onClick={() => toggleGroup(item.label)}
-                  className="flex w-full items-center justify-between text-[#fbbf24] px-3 py-2 hover:bg-[#fbbf24]/10 hover:text-[#fde68a] rounded-lg transition"
-                >
-                  <div className="flex items-center gap-2">
-                    <item.icon className="w-5 h-5" />
-                    <span className="font-semibold text-sm">{item.label}</span>
-                  </div>
-                  <ChevronRight className={cn("w-4 h-4 transition-transform duration-200", isOpen && "rotate-90")} />
-                </button>
-                {isOpen && (
-                  <div className="pl-8 mt-1 space-y-1" data-submenu={item.label}>
-                    {item.children.map(child => (
-                      <Link
-                        key={child.label}
-                        href={child.href!}
-                        className={cn(
-                          'flex items-center gap-2 px-2 py-1 rounded-md hover:bg-[#fbbf24]/10 hover:text-[#fde68a] transition duration-150',
-                          pathname === child.href && 'bg-[#fbbf24] text-[#0f172a] font-semibold shadow-sm'
-                        )}
-                      >
-                        <child.icon className="w-4 h-4" />
-                        <span>{child.label}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          }
-
-          return (
-            <Link
-              key={item.label}
-              href={item.href!}
-              className={cn(
-                'flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#fbbf24]/10 hover:text-[#fde68a] transition',
-                pathname === item.href && 'bg-[#fbbf24] text-[#0f172a] font-semibold shadow-sm'
-              )}
+      if (item.children) {
+        return (
+          <div key={item.label} className="group">
+            <button
+              onClick={() => toggleGroup(item.label)}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl
+                         text-[#FFD84D] hover:text-white
+                         hover:bg-white/[0.07] transition
+                         ring-1 ring-transparent hover:ring-[#FFD84D]/30"
             >
-              <item.icon className="w-5 h-5" />
-              <span className="text-sm">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-    </aside>
+              <div className="flex items-center gap-2.5">
+                <item.icon className="w-5 h-5" />
+                <span className="font-medium">{item.label}</span>
+              </div>
+              <ChevronRight
+                className={cn(
+                  'w-4 h-4 text-white/60 transition-transform duration-200',
+                  isOpen && 'rotate-90'
+                )}
+              />
+            </button>
+
+            {isOpen && (
+              <div className="pl-8 mt-1 space-y-1.5" data-submenu={item.label}>
+                {item.children.map(child => {
+                  const active = pathname === child.href;
+                  return (
+                    <Link
+                      key={child.label}
+                      href={child.href!}
+                      className={cn(
+                        'relative flex items-center gap-2 px-2.5 py-2 rounded-lg transition',
+                        'hover:bg-white/[0.07] hover:ring-1 hover:ring-[#FFD84D]/25',
+                        active &&
+                          'bg-[#262A32] text-white font-semibold ring-1 ring-[#FFD84D]/40'
+                      )}
+                    >
+                      <span className={cn(
+                        'absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-transparent',
+                        active && 'bg-[#FFD84D]'
+                      )}/>
+                      <child.icon className="w-4 h-4 text-white/70" />
+                      <span>{child.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      const active = pathname === item.href;
+      return (
+        <Link
+          key={item.label}
+          href={item.href!}
+          className={cn(
+            'relative flex items-center gap-2 px-3 py-2.5 rounded-xl transition',
+            'hover:bg-white/[0.07] hover:ring-1 hover:ring-[#FFD84D]/30',
+            active && 'bg-[#262A32] text-white font-semibold ring-1 ring-[#FFD84D]/40'
+          )}
+        >
+          <span className={cn(
+            'absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-transparent',
+            active && 'bg-[#FFD84D]'
+          )}/>
+          <item.icon className="w-5 h-5 text-white/70" />
+          <span>{item.label}</span>
+        </Link>
+      );
+    })}
+  </nav>
+</aside>
+
   );
 }
