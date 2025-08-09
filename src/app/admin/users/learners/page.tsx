@@ -261,14 +261,23 @@ export default function UserListPage() {
                 {/* Người dùng */}
                 <td className="px-5 py-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white font-semibold">
-                      {u.avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={u.avatarUrl} alt={u.name} className="w-9 h-9 rounded-full object-cover" />
-                      ) : (
-                        u.name.split(' ').slice(-1)[0][0]
-                      )}
+                    <div className="flex items-center">
+                      {/* Avatar */}
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold uppercase
+                  bg-[#FFD84D] text-[#1F232B]">
+                        {u.avatarUrl ? (
+                          <img
+                            src={u.avatarUrl}
+                            alt={u.name}
+                            className="w-9 h-9 rounded-full object-cover"
+                          />
+                        ) : (
+                          u.name.trim().charAt(0)
+                        )}
+                      </div>
+
                     </div>
+
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
                         <span className="text-white font-medium">{u.name}</span>
