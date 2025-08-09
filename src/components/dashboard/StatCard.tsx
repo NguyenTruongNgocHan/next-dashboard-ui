@@ -18,13 +18,29 @@ export default function StatCard({
   const isIncrease = changeType === 'increase';
 
   return (
-    <div className="bg-black text-white border border-yellow-400 p-4 rounded-xl space-y-2">
-      <div className="flex items-center gap-2 text-yellow-300">
+    <div
+      className="p-4 rounded-xl space-y-2
+                 bg-gradient-to-b from-[#1A1D24] to-[#22252C]
+                 border border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.25)]
+                 transition hover:shadow-[0_6px_24px_rgba(0,0,0,0.35)]"
+    >
+      {/* Icon + Label */}
+      <div className="flex items-center gap-2 text-[#FFD84D]">
         <Icon className="w-5 h-5" />
-        <span className="font-medium">{label}</span>
+        <span className="font-medium text-sm">{label}</span>
       </div>
-      <div className="text-3xl font-bold">{value}</div>
-      <div className={isIncrease ? 'text-green-400' : 'text-red-400'}>
+
+      {/* Value */}
+      <div className="text-3xl font-bold text-white">{value}</div>
+
+      {/* Change */}
+      <div
+        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium
+          ${isIncrease
+            ? 'bg-green-500/10 text-green-400'
+            : 'bg-red-500/10 text-red-400'
+          }`}
+      >
         {isIncrease ? '▲' : '▼'} {change}
       </div>
     </div>

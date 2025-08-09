@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="flex flex-col flex-1">
         <Header />
-        <main className="flex-1 overflow-y-auto bg-gray-100 text-black p-6">
+        <main className="flex-1 overflow-y-auto bg-gray-100 text-black p-0">
           {children}
         </main>
       </div>
