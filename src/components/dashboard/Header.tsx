@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Download } from 'lucide-react'; // thêm icon
+import { Download, UserPlus } from 'lucide-react'; // thêm icon UserPlus
 
 // Thông tin tiêu đề & mô tả cho từng trang
 const thongTinTrang: Record<string, { tieuDe: string; moTa: string }> = {
@@ -29,6 +29,7 @@ export default function Header() {
   const duongDan = usePathname();
   const hienTai = thongTinTrang[duongDan] || { tieuDe: 'Trang không xác định', moTa: '' };
   const laDashboard = duongDan === '/admin';
+  const laDanhSachNguoiHoc = duongDan === '/admin/users/learners';
 
   return (
     <header
@@ -50,10 +51,9 @@ export default function Header() {
         )}
       </div>
 
-      {/* Bên phải: Dashboard -> 2 nút, trang khác -> logo */}
+      {/* Bên phải */}
       {laDashboard ? (
         <div className="flex items-center gap-3">
-          {/* Secondary: Live Data */}
           <button
             type="button"
             className="px-4 py-2 rounded-full
@@ -65,7 +65,6 @@ export default function Header() {
             Live Data
           </button>
 
-          {/* Primary: Xuất báo cáo */}
           <button
             type="button"
             className="inline-flex items-center gap-2
@@ -79,9 +78,23 @@ export default function Header() {
             Xuất báo cáo
           </button>
         </div>
+      ) : laDanhSachNguoiHoc ? (
+        <div>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2
+                       px-4 py-2 rounded-xl
+                       bg-[#FFD84D] text-black font-semibold
+                       shadow-[0_6px_20px_rgba(255,216,77,0.25)]
+                       hover:bg-[#FFE169]
+                       transition text-sm"
+          >
+            <UserPlus className="w-4 h-4" />
+            Thêm người dùng
+          </button>
+        </div>
       ) : (
         <div className="relative w-10 h-10">
-          {/* Khung lục giác */}
           <div className="absolute inset-0 rotate-[18deg]">
             <Image
               src="/images/frame_logo.png"
@@ -91,7 +104,6 @@ export default function Header() {
               priority
             />
           </div>
-          {/* Chữ B ở giữa, xoay ngược lại */}
           <div className="absolute inset-0 -rotate-[18deg] flex items-center justify-center text-white text-lg font-extrabold">
             B
           </div>
