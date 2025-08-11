@@ -94,7 +94,7 @@ export default function SignInPage() {
             <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)} />
             Ghi nhớ đăng nhập
           </label>
-          <Link href="/forgot" className="text-blue-500 hover:underline">Quên mật khẩu?</Link>
+          <Link href="/sign-in/forgot" className="text-blue-500 hover:underline">Quên mật khẩu?</Link>
         </div>
 
         <button
